@@ -34,9 +34,6 @@ export default function Signup({ navigation }) {
 
   const [state, dispatch] = useReducer(signupReducer, initialState);
 
-  const passwordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
   const signupHandler = () => {
     if (!state.name.trim()) {
       dispatch({
@@ -69,9 +66,9 @@ export default function Signup({ navigation }) {
     // TODO, PRCEEDING WITH SIGNUP
   };
 
-  const emailAddrHandler = () => {
+  const emailAddrHandler = (value = state.email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!state.email.trim() || !emailRegex.test(state.email.trim())) {
+    if (!value.trim() || !emailRegex.test(value.trim())) {
       dispatch({
         type: "SET_ERROR",
         field: "email",
@@ -81,8 +78,11 @@ export default function Signup({ navigation }) {
     }
   };
 
-  const passwordHanlder = () => {
-    if (!passwordRegex.test(state.password)) {
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+  const passwordHanlder = (value = state.password) => {
+    if (!passwordRegex.test(value)) {
       dispatch({
         type: "SET_ERROR",
         field: "password",
@@ -135,7 +135,7 @@ export default function Signup({ navigation }) {
         value={state.email}
         onChangeText={(value) => {
           dispatch({ type: "SET_FIELD", field: "email", value });
-          if (!emailAddrHandler())
+          if (!emailAddrHandler(value))
             dispatch({ type: "SET_ERROR", field: "email", value: null });
         }}
       />
@@ -151,7 +151,7 @@ export default function Signup({ navigation }) {
         secureTextEntry={true}
         onChangeText={(value) => {
           dispatch({ type: "SET_FIELD", field: "password", value });
-          if (!passwordHanlder()) {
+          if (!passwordHanlder(value)) {
             dispatch({ type: "SET_ERROR", field: "password", value: null });
             if (state.errors.confirmPassword === " ")
               dispatch({
@@ -178,10 +178,11 @@ export default function Signup({ navigation }) {
         secureTextEntry={true}
         onChangeText={(value) => {
           dispatch({ type: "SET_FIELD", field: "confirmPassword", value });
+
           dispatch({
             type: "SET_ERROR",
             field: "confirmPassword",
-            value: null,
+            message: state.password !== value ? "Passwords do not match" : null,
           });
         }}
       />

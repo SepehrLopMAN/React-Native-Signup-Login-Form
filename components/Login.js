@@ -1,12 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, SafeAreaView, Text, TextInput } from "react-native";
 import styles from "../utils/styles";
+import { useIsFocused } from "@react-navigation/native";
 
 export default function Login({ navigation }) {
   [username, setUsername] = useState("");
   [usernameError, setUsernameError] = useState(false);
   [password, setPassword] = useState("");
   [passowrdError, setPassowrdError] = useState(false);
+
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused) {
+      setUsernameError(false);
+      setPassowrdError(false);
+    }
+  }, [isFocused]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -49,6 +59,7 @@ export default function Login({ navigation }) {
         title="Submit"
         onPress={() => {
           if (username.trim() === "") setUsernameError(true);
+          if (password === "") setPassowrdError(true);
         }}
       />
     </SafeAreaView>
