@@ -165,8 +165,17 @@ export default function Signup({ navigation }) {
           secureTextEntry={!showPassword}
           onChangeText={(value) => {
             dispatch({ type: "SET_FIELD", field: "password", value });
+
             if (!passwordHanlder(value)) {
               dispatch({ type: "SET_ERROR", field: "password", value: null });
+              dispatch({
+                type: "SET_ERROR",
+                field: "confirmPassword",
+                message:
+                  state.confirmPassword !== value
+                    ? "Passwords do not match"
+                    : null,
+              });
               if (state.errors.confirmPassword === " ")
                 dispatch({
                   type: "SET_ERROR",
