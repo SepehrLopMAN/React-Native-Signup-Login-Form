@@ -90,7 +90,7 @@ export default function Signup({ navigation }) {
   };
 
   const passwordRegex =
-    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+=-]).{8,}$/;
 
   const passwordHanlder = (value = state.password) => {
     if (!passwordRegex.test(value)) {
