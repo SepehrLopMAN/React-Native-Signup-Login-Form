@@ -29,6 +29,17 @@ const styles = StyleSheet.create({
     color: "#0000EE",
     marginBottom: 10,
   },
+  pwdContainer: {
+    position: "relative",
+  },
+  visibilityIcon: {
+    position: "absolute",
+    right: 10,
+    top: 32,
+    height: 25,
+    width: 25,
+    padding: 0,
+  },
 });
 
 export default styles;

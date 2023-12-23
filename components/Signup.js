@@ -1,5 +1,14 @@
-import React, { useReducer } from "react";
-import { SafeAreaView, Text, TextInput, Button, Picker } from "react-native";
+import React, { useReducer, useState } from "react";
+import {
+  SafeAreaView,
+  Text,
+  TextInput,
+  Button,
+  Picker,
+  View,
+  TouchableOpacity,
+  Image,
+} from "react-native";
 import styles from "../utils/styles";
 
 const signupReducer = (state, action) => {
@@ -33,6 +42,8 @@ export default function Signup({ navigation }) {
   };
 
   const [state, dispatch] = useReducer(signupReducer, initialState);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfPassword, setShowConfPassword] = useState(false);
 
   const signupHandler = () => {
     if (!state.name.trim()) {
@@ -143,49 +154,90 @@ export default function Signup({ navigation }) {
       {state.errors.email && (
         <Text style={styles.error}>{state.errors.email}</Text>
       )}
-
-      <TextInput
-        style={[styles.textInp, state.errors.password ? styles.inputError : {}]}
-        placeholder="Password"
-        value={state.password}
-        secureTextEntry={true}
-        onChangeText={(value) => {
-          dispatch({ type: "SET_FIELD", field: "password", value });
-          if (!passwordHanlder(value)) {
-            dispatch({ type: "SET_ERROR", field: "password", value: null });
-            if (state.errors.confirmPassword === " ")
-              dispatch({
-                type: "SET_ERROR",
-                field: "confirmPassword",
-                value: null,
-              });
-          }
-        }}
-      />
+      <View style={styles.pwdContainer}>
+        <TextInput
+          style={[
+            styles.textInp,
+            state.errors.password ? styles.inputError : {},
+          ]}
+          placeholder="Password"
+          value={state.password}
+          secureTextEntry={!showPassword}
+          onChangeText={(value) => {
+            dispatch({ type: "SET_FIELD", field: "password", value });
+            if (!passwordHanlder(value)) {
+              dispatch({ type: "SET_ERROR", field: "password", value: null });
+              if (state.errors.confirmPassword === " ")
+                dispatch({
+                  type: "SET_ERROR",
+                  field: "confirmPassword",
+                  value: null,
+                });
+            }
+          }}
+        />
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={styles.visibilityIcon}
+          onPress={() => setShowPassword((val) => !val)}
+        >
+          <Image
+            style={{
+              width: 25,
+              height: 25,
+            }}
+            source={
+              showPassword
+                ? require("../assets/img/eye-view.png")
+                : require("../assets/img/eye-hide.png")
+            }
+          />
+        </TouchableOpacity>
+      </View>
 
       {state.errors.password && (
         <Text style={styles.error}>{state.errors.password}</Text>
       )}
 
-      <TextInput
-        style={[
-          styles.textInp,
-          state.errors.confirmPassword ? styles.inputError : {},
-          !state.errors.confirmPassword ? { marginBottom: 20 } : {},
-        ]}
-        placeholder="Repeat Password"
-        value={state.confirmPassword}
-        secureTextEntry={true}
-        onChangeText={(value) => {
-          dispatch({ type: "SET_FIELD", field: "confirmPassword", value });
+      <View style={styles.pwdContainer}>
+        <TextInput
+          style={[
+            styles.textInp,
+            state.errors.confirmPassword ? styles.inputError : {},
+            !state.errors.confirmPassword ? { marginBottom: 20 } : {},
+          ]}
+          placeholder="Repeat Password"
+          value={state.confirmPassword}
+          secureTextEntry={!showConfPassword}
+          onChangeText={(value) => {
+            dispatch({ type: "SET_FIELD", field: "confirmPassword", value });
 
-          dispatch({
-            type: "SET_ERROR",
-            field: "confirmPassword",
-            message: state.password !== value ? "Passwords do not match" : null,
-          });
-        }}
-      />
+            dispatch({
+              type: "SET_ERROR",
+              field: "confirmPassword",
+              message:
+                state.password !== value ? "Passwords do not match" : null,
+            });
+          }}
+        />
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={styles.visibilityIcon}
+          onPress={() => setShowConfPassword((val) => !val)}
+        >
+          <Image
+            style={{
+              width: 25,
+              height: 25,
+            }}
+            source={
+              showConfPassword
+                ? require("../assets/img/eye-view.png")
+                : require("../assets/img/eye-hide.png")
+            }
+          />
+        </TouchableOpacity>
+      </View>
 
       {state.errors.confirmPassword && (
         <Text style={[styles.error, { marginBottom: 20 }]}>

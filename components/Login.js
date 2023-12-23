@@ -1,14 +1,22 @@
 import { useEffect, useState } from "react";
-import { Button, SafeAreaView, Text, TextInput } from "react-native";
+import {
+  Button,
+  Image,
+  SafeAreaView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
 import styles from "../utils/styles";
 import { useIsFocused } from "@react-navigation/native";
 
 export default function Login({ navigation }) {
-  [username, setUsername] = useState("");
-  [usernameError, setUsernameError] = useState(false);
-  [password, setPassword] = useState("");
-  [passowrdError, setPassowrdError] = useState(false);
-
+  const [username, setUsername] = useState("");
+  const [usernameError, setUsernameError] = useState(false);
+  const [password, setPassword] = useState("");
+  const [passowrdError, setPassowrdError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -33,20 +41,40 @@ export default function Login({ navigation }) {
       {usernameError && (
         <Text style={styles.error}> Username/Email required! </Text>
       )}
-      <TextInput
-        style={[
-          styles.textInp,
-          passowrdError ? styles.inputError : {},
-          !passowrdError ? { marginBottom: 20 } : {},
-        ]}
-        placeholder="Password"
-        value={password}
-        onChangeText={(val) => {
-          setPassword(val);
-          setPassowrdError(false);
-        }}
-        secureTextEntry
-      />
+      <View style={styles.pwdContainer}>
+        <TextInput
+          style={[
+            styles.textInp,
+            passowrdError ? styles.inputError : {},
+            !passowrdError ? { marginBottom: 20 } : {},
+          ]}
+          placeholder="Password"
+          value={password}
+          onChangeText={(val) => {
+            setPassword(val);
+            setPassowrdError(false);
+          }}
+          secureTextEntry={!showPassword}
+        />
+
+        <TouchableOpacity
+          activeOpacity={0.8}
+          style={styles.visibilityIcon}
+          onPress={() => setShowPassword((val) => !val)}
+        >
+          <Image
+            style={{
+              width: 25,
+              height: 25,
+            }}
+            source={
+              showPassword
+                ? require("../assets/img/eye-view.png")
+                : require("../assets/img/eye-hide.png")
+            }
+          />
+        </TouchableOpacity>
+      </View>
       {passowrdError && (
         <Text style={[styles.error, { marginBottom: 20 }]}>
           Password required!
